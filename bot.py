@@ -290,13 +290,9 @@ async def ch(message: types.Message):
 <b>BOT</b>: @{BOT_USERNAME}''')
 
 
-@dp.message_handler(commands=['gen'], commands_prefix=PREFIX)
-async def ch(message: types.Message):
+@@dp.message_handler(commands=['gen'], commands_prefix=PREFIX)
+async def binio(message: types.Message):
     await message.answer_chat_action('typing')
-    tic = time.perf_counter()
-    ID = message.from_user.id
-    FIRST = message.from_user.first_name
-    try:
 if message.reply_to_message is not None:
                 message.text = message.reply_to_message.text
             text = f"""<b>WAIT FOR RESULTS</b>"""
