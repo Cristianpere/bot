@@ -22,79 +22,6 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-Client.on_message(filters.command(["gen", "make"], prefixes=[".", "/", "!"], case_sensitive=False) & filters.text)
-async def gen(Client , message):
-    try:
-        banned_bins = open('files/bannedbin.txt', 'r').readlines()
-        verified_gps = open('files/groups.txt', 'r').readlines()
-        if (str(message.chat.id) + "\n" not in verified_gps and message.chat.type != "free"):
-            await message.reply_text(text= group_not_allowed,reply_to_message_id=message.message_id)
-        else:
-            if message.reply_to_message is not None:
-                message.text = message.reply_to_message.text
-            text = f"""<b>WAIT FOR RESULTS</b>"""
-            msg = await message.reply_text(text=text,reply_to_message_id=message.message_id)
-            await Client.send_chat_action(message.chat.id, "typing")
-            find = maindb.find_one({"_id": message.from_user.id})
-            if isinstance(find, type(None)) == True:
-                await msg.edit_text(use_not_registered)
-            elif find['status'] == "F" and message.chat.type == 'private':
-                await msg.edit_text(buy_premium)
-            else:
-                input = re.findall(r"[0-9]+", message.text)
-                if len(input) == 0:
-                    await msg.edit_text("Your Bin Is Empty")
-                if len(input) == 1:
-                    cc = input[0]
-                    mes = 'x'
-                    ano = 'x'
-                    cvv = 'x'
-                elif len(input[0]) < 6 or len(input[0]) > 16:
-                    await msg.edit_text("Your Bin Is Incorrect")
-                if len(input) == 2:
-                    cc = input[0]
-                    mes = input[1]
-                    ano = 'x'
-                    cvv = 'x'
-                if len(input) == 3:
-                    cc = input[0]
-                    mes = input[1]
-                    ano = input[2]
-                    cvv = 'x'
-                if len(input) == 4:
-                    cc = input[0]
-                    mes = input[1]
-                    ano = input[2]
-                    cvv = input[3]
-                else:
-                    if len(cc) > 15:
-                        await msg.edit_text("Your Bin Is Invalid.")
-                    else:
-                        # lista = cc + "|" + mes + "|" + ano + "|" + cvv
-                        bin = cc[:6]
-                        res = requests.get("https://jocastabins.herokuapp.com/api/" + bin)
-                        if res.status_code != requests.codes.ok or json.loads(res.text)['result'] == False:
-                            await msg.edit_text("Your Bin Is Invalid.")
-                        elif str(bin) + "\n"in banned_bins or "PREPAID" in res.text:
-                            await msg.edit_text("Your Bin Is Banned.")
-                        else:
-                            bin_data = json.loads(res.text)
-                            cc_gen(cc,mes,ano,cvv)
-                            cards = ''.join(ccs)
-                            ccs.clear()
-                            text = f"""
-<b>〄</b> CC GENRATOR
-<b>○</b> YOUR DATA = {cc}|{mes}|{ano}|{cvv}.
-<b>○</b> BANK INFO: <b>{bin_data['data']['bank']} - {bin_data['data']['countryInfo']['code']}({bin_data['data']['countryInfo']['emoji']})</b>
-<b>○</b> BIN INFO: <code>{bin}</code> - <b>{bin_data['data']['level']}</b> - <b>{bin_data['data']['type']}</b>
-
-<code>{cards} </code>"""       
-                            buttons = [[InlineKeyboardButton('GEN AGAIN', callback_data='gen')]]   
-                            reply_markup = InlineKeyboardMarkup(buttons)
-                            await msg.edit_text(text,reply_markup=reply_markup)
-    except Exception as e:
-        print(e)
-
 
 # Configure vars get from env or config.yml
 CONFIG = yaml.load(open('config.yml', 'r'), Loader=yaml.SafeLoader)
@@ -149,13 +76,13 @@ async def is_owner(user_id):
 async def helpstr(message: types.Message):
     # await message.answer_chat_action('typing')
     keyboard_markup = types.InlineKeyboardMarkup(row_width=3)
-    btns = types.InlineKeyboardButton("Bot Diego", url="https://t.me/Diego")
+    btns = types.InlineKeyboardButton("Bot DiegoAkk", url="https://t.me/Diego")
     keyboard_markup.row(btns)
     FIRST = message.from_user.first_name
     MSG = f'''
 Hello {FIRST}, Im {BOT_NAME}
-U can find my Boss  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds /chk /info /bin'''
+U can find my Boss  <a href="tg://user?id={OWNER}">DiegoAkk</a>
+Cmds /chk /info /bin /gen'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -363,6 +290,77 @@ async def ch(message: types.Message):
 <b>BOT</b>: @{BOT_USERNAME}''')
 
 
+@dp.message_handler(commands=['gen'], commands_prefix=PREFIX)
+async def ch(message: types.Message):
+    await message.answer_chat_action('typing')
+    tic = time.perf_counter()
+    ID = message.from_user.id
+    FIRST = message.from_user.first_name
+    try:
+if message.reply_to_message is not None:
+                message.text = message.reply_to_message.text
+            text = f"""<b>WAIT FOR RESULTS</b>"""
+            msg = await message.reply_text(text=text,reply_to_message_id=message.message_id)
+            await Client.send_chat_action(message.chat.id, "typing")
+            find = maindb.find_one({"_id": message.from_user.id})
+            if isinstance(find, type(None)) == True:
+                await msg.edit_text(use_not_registered)
+            elif find['status'] == "F" and message.chat.type == 'private':
+                await msg.edit_text(buy_premium)
+            else:
+                input = re.findall(r"[0-9]+", message.text)
+                if len(input) == 0:
+                    await msg.edit_text("Your Bin Is Empty")
+                if len(input) == 1:
+                    cc = input[0]
+                    mes = 'x'
+                    ano = 'x'
+                    cvv = 'x'
+                elif len(input[0]) < 6 or len(input[0]) > 16:
+                    await msg.edit_text("Your Bin Is Incorrect")
+                if len(input) == 2:
+                    cc = input[0]
+                    mes = input[1]
+                    ano = 'x'
+                    cvv = 'x'
+                if len(input) == 3:
+                    cc = input[0]
+                    mes = input[1]
+                    ano = input[2]
+                    cvv = 'x'
+                if len(input) == 4:
+                    cc = input[0]
+                    mes = input[1]
+                    ano = input[2]
+                    cvv = input[3]
+                else:
+                    if len(cc) > 15:
+                        await msg.edit_text("Your Bin Is Invalid.")
+                    else:
+                        # lista = cc + "|" + mes + "|" + ano + "|" + cvv
+                        bin = cc[:6]
+                        res = requests.get("https://jocastabins.herokuapp.com/api/" + bin)
+                        if res.status_code != requests.codes.ok or json.loads(res.text)['result'] == False:
+                            await msg.edit_text("Your Bin Is Invalid.")
+                        elif str(bin) + "\n"in banned_bins or "PREPAID" in res.text:
+                            await msg.edit_text("Your Bin Is Banned.")
+                        else:
+                            bin_data = json.loads(res.text)
+                            cc_gen(cc,mes,ano,cvv)
+                            cards = ''.join(ccs)
+                            ccs.clear()
+                            text = f"""
+<b>〄</b> CC GENERATOR
+<b>○</b> YOUR DATA = {cc}|{mes}|{ano}|{cvv}.
+<b>○</b> BANK INFO: <b>{bin_data['data']['bank']} - {bin_data['data']['countryInfo']['code']}({bin_data['data']['countryInfo']['emoji']})</b>
+<b>○</b> BIN INFO: <code>{bin}</code> - <b>{bin_data['data']['level']}</b> - <b>{bin_data['data']['type']}</b>
+
+<code>{cards} </code>"""       
+                            buttons = [[InlineKeyboardButton('GEN AGAIN', callback_data='gen')]]   
+                            reply_markup = InlineKeyboardMarkup(buttons)
+                            await msg.edit_text(text,reply_markup=reply_markup)
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
