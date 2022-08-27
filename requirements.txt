@@ -1,3 +1,10 @@
 aiogram
 requests
 PyYAML
+pyrogram==1.4
+tgcrypto
+pymongo
+dnspython
+pymongo[srv]
+requests
+bs4
