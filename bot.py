@@ -7,6 +7,16 @@ import random
 import yaml
 import asyncio
 import re
+import time
+from pyrogram import Client
+import requests
+from requests.exceptions import ProxyError
+import re
+# import bs4
+from values import *
+from pyrogram import Client, filters
+import json
+
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
